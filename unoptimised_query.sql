@@ -1,5 +1,4 @@
-EXPLAIN 
-/*+ SUBQUERY(MATERIALIZATION) */
+EXPLAIN
 SELECT 
     a05.Accident_Index AS id_0507,
     a09.Accident_Index AS id_0911,
@@ -9,10 +8,17 @@ SELECT
     a05.Number_of_Vehicles,
     a05.Number_of_Casualties,
     a05.Date
-FROM accidents2005and2007 a05
-LEFT JOIN accidents2009and2011 a09 
+FROM (
+    /*+ SUBQUERY(MATERIALIZATION) */
+    SELECT * FROM accidents2005and2007
+) AS a05
+LEFT JOIN (
+    SELECT * FROM accidents2009and2011
+) AS a09
     ON a05.Police_Force = a09.Police_Force
-LEFT JOIN accidents2012and2014 a12 
+LEFT JOIN (
+    SELECT * FROM accidents2012and2014
+) AS a12
     ON a05.Police_Force = a12.Police_Force
 WHERE 
     (
